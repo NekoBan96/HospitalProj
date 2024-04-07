@@ -1,0 +1,1259 @@
+new isvek.Bvi();
+const date = new Date();
+console.log(date);
+/* initialize slick on the element */
+var Sliders = function() {
+    var top_slider = function() {
+        $(".top_slider").slick({
+            draggable: true,
+            dots: true,
+            infinite: true,
+            speed: 300,
+            autoplay: true,
+            autoplaySpeed: 5000,
+            slidesToShow: 1,
+            adaptiveHeight: true,
+            lazyLoad: 'ondemand',
+            fade: true,
+            prevArrow: "<a class=\"slick-prev slick-arrow\" aria-label=\"Previous\" type=\"button\" style=\"\"><svg width=\"1em\" height=\"1em\" viewBox=\"0 0 16 16\" class=\"bi bi-arrow-left-circle\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\">\n" +
+                "<path fill-rule=\"evenodd\" d=\"M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z\"/>\n" +
+                "</svg></a>",
+            nextArrow: "<a class=\"slick-next slick-arrow\" aria-label=\"Next\" type=\"button\" style=\"\"><svg width=\"1em\" height=\"1em\" viewBox=\"0 0 16 16\" class=\"bi bi-arrow-right-circle\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\">\n" +
+                "<path fill-rule=\"evenodd\" d=\"M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z\"/>\n" +
+                "</svg></a>"
+        });
+    }
+
+    var link_feed = function() {
+        $(".link_feed").slick({
+            draggable: true,
+            infinite: true,
+            speed: 700,
+            autoplay: true,
+            autoplaySpeed: 5000,
+            slidesToShow: 3,
+            slidesToScroll: 3,
+            lazyLoad: 'ondemand',
+            //centerMode: true,
+            dots: true,
+            arrows: false,
+            prevArrow: "<a class=\"slick-prev slick-arrow\" aria-label=\"Previous\" type=\"button\" style=\"\"><svg width=\"1em\" height=\"1em\" viewBox=\"0 0 16 16\" class=\"bi bi-arrow-left-circle\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\">\n" +
+                "<path fill-rule=\"evenodd\" d=\"M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z\"/>\n" +
+                "</svg></a>",
+            nextArrow: "<a class=\"slick-next slick-arrow\" aria-label=\"Next\" type=\"button\" style=\"\"><svg width=\"1em\" height=\"1em\" viewBox=\"0 0 16 16\" class=\"bi bi-arrow-right-circle\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\">\n" +
+                "<path fill-rule=\"evenodd\" d=\"M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z\"/>\n" +
+                "</svg></a>",
+            responsive: [
+                {
+                    breakpoint: 1200,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                        infinite: true,
+                        dots: true
+                    }
+                },
+                {
+                    breakpoint: 992,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                        infinite: true,
+                        dots: true
+                    }
+                }
+            ]
+        });
+    }
+
+    return {
+        // public functions
+        init: function() {
+            top_slider();
+            link_feed();
+        },
+    };
+}();
+/* !end initialize slick on the element */
+
+/* lightgallery */
+var lightGallery = function() {
+
+    var base = function () {
+        $('.gallery').lightGallery({
+            thumbnail: true,
+            actualSize: false,
+            share: false,
+            rotate: false,
+            download: false,
+        });
+    }
+
+    var news_gallery = function () {
+        $('.gallery-nav').lightGallery({
+            thumbnail:true,
+            share: false,
+            rotate:false,
+            actualSize: false,
+        });
+        $('.gallery-nav').slick({
+            lazyLoad: 'ondemand',
+            draggable: true,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: true,
+            fade: false,
+            infinite: true,
+            useTransform: true,
+            speed: 400,
+           /* asNavFor: '.gallery-dots',*/
+            prevArrow: "<a class=\"slick-prev slick-arrow\" aria-label=\"Previous\" type=\"button\" style=\"\"><svg width=\"1em\" height=\"1em\" viewBox=\"0 0 16 16\" class=\"bi bi-arrow-left-circle\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\">\n" +
+                "<path fill-rule=\"evenodd\" d=\"M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z\"/>\n" +
+                "</svg></a>",
+            nextArrow: "<a class=\"slick-next slick-arrow\" aria-label=\"Next\" type=\"button\" style=\"\"><svg width=\"1em\" height=\"1em\" viewBox=\"0 0 16 16\" class=\"bi bi-arrow-right-circle\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\">\n" +
+                "<path fill-rule=\"evenodd\" d=\"M4 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5A.5.5 0 0 0 4 8z\"/>\n" +
+                "</svg></a>"
+        });
+        $('.gallery-dots').slick({
+            centerMode: true,
+            slidesToShow: 5,
+            slidesToScroll: 1,
+            dots: false,
+            focusOnSelect: false,
+            infinite: true,
+            arrows: false,
+            draggable: true,
+            useTransform: true,
+            responsive: [
+                {
+                    breakpoint: 1200,
+                    settings: {
+                        slidesToShow: 5,
+                        slidesToScroll: 1,
+                    }
+                },
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 4,
+                        slidesToScroll: 1,
+                    }
+                },
+                {
+                    breakpoint: 767,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                    }
+                },
+                {
+                    breakpoint: 575,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                    }
+                },
+                ]
+        });
+
+        $('.gallery-nav').on('afterChange', function(event, slick, currentSlide) {
+            $('.gallery-dots').slick('slickGoTo', currentSlide);
+            var currrentNavSlideElem = '.gallery-dots .slick-slide[data-slick-index="' + currentSlide + '"]';
+            $('.gallery-dots .slick-slide.slick-current').removeClass('slick-current');
+            $(currrentNavSlideElem).addClass('slick-current');
+        });
+
+        $('.gallery-dots').on('click', '.slick-slide', function(event) {
+            event.preventDefault();
+            var goToSingleSlide = $(this).data('slick-index');
+
+            $('.gallery-nav').slick('slickGoTo', goToSingleSlide);
+        });
+
+    }
+
+    return {
+        // public functions
+        init: function() {
+            news_gallery();
+            base();
+        },
+    };
+
+}();
+/* end lieghtgallery */
+
+// scroll
+var scrollWindow = function() {
+
+    var scrollAction = function() {
+        $(window).scroll(function () {
+            var $w = $(this),
+                st = $w.scrollTop(),
+                navbar = $('.header_main'),
+                scrolltop = $('.scrolltop'),
+                sd = $('.js-scroll-wrap'),
+                submenu = $('.submenu'),
+                header = $('header.fixed'),
+                body = $('body');
+
+                var sub_h = submenu.height() ? submenu.height() + 36 : 0;
+                var height_header = header.height() + sub_h;
+            if (st > 200) {
+                if (!navbar.hasClass('scrolled')) {
+                    navbar.addClass('scrolled');
+                    if (window.screen.width > 991)
+                    {
+                        header.addClass('fixed_head').removeClass('normal');
+                        submenu.addClass('fixed_head').removeClass('normal');
+                        body.css('padding-top', height_header);
+                    }
+
+                }
+                scrolltop.addClass('scrolltop--on');
+            }
+            if (st < 200) {
+                if (navbar.hasClass('scrolled')) {
+                    navbar.removeClass('scrolled sleep');
+                    if (window.screen.width >991)
+                    {
+                        header.removeClass('fixed_head').addClass('normal');
+                        submenu.removeClass('fixed_head').addClass('normal');
+                        body.css('padding-top', '');
+                    }
+
+                }
+                scrolltop.removeClass('scrolltop--on');
+            }
+            if (st > 300) {
+                if (!navbar.hasClass('awake')) {
+                    navbar.addClass('awake');
+                }
+
+                if (sd.length > 0) {
+                    sd.addClass('sleep');
+                }
+            }
+            if (st < 300) {
+                if (navbar.hasClass('awake')) {
+                    navbar.removeClass('awake');
+                    navbar.addClass('sleep');
+                }
+                if (sd.length > 0) {
+                    sd.removeClass('sleep');
+                }
+            }
+        });
+    }
+
+    var scrollTop = function() {
+        $(".scrolltop").click(function () {
+            $('html, body').animate({scrollTop:0}, 'fast');
+        });
+    }
+
+    var scrollAnchor = function() {
+        if(document.location.href.indexOf('#') != -1 && window.location.hash) {
+            var block = $(window.location.hash);
+            console.log(block);
+            if(block && block.length > 0) {
+                $('html, body').animate({
+                    scrollTop: block.offset().top - 130
+                }, 500);
+            }
+        }
+        $(document).on('click', '.anchor', function (event) {
+            //event.preventDefault();
+            $('html, body').animate({
+                scrollTop: $($.attr(this, 'href')).offset().top - 150
+            }, 500);
+        });
+
+        $(document).on('click', '.anchor-section', function (event) {
+            //event.preventDefault();
+            $('html, body').animate({
+                scrollTop: $($.attr(this, 'href')).offset().top - 100
+            }, 500);
+        });
+    }
+
+    return {
+        // public functions
+        init: function() {
+            scrollAction();
+            scrollTop();
+            scrollAnchor();
+        },
+    };
+
+}();
+
+// Vibrant.js
+var VibrantImage = function() {
+
+    var importantItemBG = function () {
+
+        var img = document.querySelectorAll('.img-vibrant');
+
+        img.forEach(function(item, i) {
+
+            const style = getComputedStyle(img[i]);
+            const url = style['background-image'].slice(4, -1).replace(/"/g, "");
+            let vibrant_bg = img[i].querySelector('.bg-vibrant');
+            Vibrant.from(url).getPalette(function(err, palette) {
+                if (palette) {
+                    var palette_color = vibrant_bg.dataset.palette ? vibrant_bg.dataset.palette : 'Muted';
+                    switch (palette_color) {
+                        case 'Vibrant':
+                            var palette_color = palette.Vibrant._rgb;
+                            break;
+                        case 'DarkVibrant':
+                            var palette_color = palette.DarkVibrant._rgb;
+                            break;
+                        case 'LightVibrant':
+                            var palette_color = palette.LightVibrant._rgb;
+                            break;
+                        case 'Muted':
+                            var palette_color = palette.Muted._rgb;
+                            break;
+                        case 'DarkMuted':
+                            var palette_color = palette.DarkMuted._rgb;
+                            break;
+                        default:
+                            var palette_color = palette.Muted._rgb;
+                    }
+                    vibrant_bg.setAttribute('style', 'background:rgb('+palette_color+')');
+                }
+            });
+        });
+    }
+
+    return {
+        // public functions
+        init: function() {
+            importantItemBG();
+        },
+    };
+}();
+// ! Vibrant.js
+
+
+//hamburger menu
+var hamburgerMenu = function() {
+
+    var menuOpen = function() {
+
+
+        $('.header__brand-menu').on('click', function () {
+
+            var scrollTopW = window.pageYOffset || document.documentElement.scrollTop;
+            console.log(scrollTopW);
+
+            $('.header__brand-menu').toggleClass('active');
+
+            if ( $('.header__brand-menu').hasClass('active')) {
+
+                $('html, body').animate({scrollTop:0}, 'fast');
+                $('.modal_menu').addClass('active');
+                
+                if (window.screen.width > 991)
+                {
+                    $('.my-shuffle-container').width('100%');
+                    $('.modal_menu').fadeIn('slow').width('100%');
+                    $('body').css({'overflow':'hidden'});
+                }
+                else
+                {
+                    $('.my-shuffle-container').width((window.screen.width -30)*0.8);
+                    $('.modal_menu').fadeIn('fast').width('80%');
+
+                }
+            }
+           else
+            {
+                $('.modal_menu').fadeOut().toggleClass('active').width('');
+                $('body').css({'overflow':''});
+                $('.my-shuffle-container').width('');
+                $('html, body').animate({scrollTop: scrollTopW}, 'fast');
+            }
+
+
+        });
+
+        $('.header__brand-menu-mobile').on('click', function (event) {
+            event.preventDefault();
+            $('.header__brand-menu').toggleClass('active');
+            $('.modal_menu').fadeOut('500').width('0').toggleClass('active');
+
+        });
+    }
+
+    var menuClose = function() {
+        $('#closeMenu').on('click', function () {
+
+          //  $('section').css({'opacity':'' , 'height':''});
+            $('.modal_menu').fadeOut();
+            $('.header__brand-menu').toggleClass('active');
+            $('.modal_menu').toggleClass('active');
+            $('body').css({'overflow':''});
+        });
+
+    }
+    return {
+        // public functions
+        init: function() {
+            menuOpen();
+           // menuClose();
+        },
+    };
+
+}();
+
+//share links
+
+var shareLinks = function() {
+
+    var linksOpen = function() {
+        $('.share_links_click').on('click', function () {
+            $('.news_hide_links').toggle({ direction: "right" }, 1000);
+        });
+    }
+
+    var linksFeedOpen = function() {
+        let container = $('.links_feed_container');
+        if(container) {
+            $('.links_feed').on('click', function () {
+                console.log('.links_feed');
+                container.css('height', 'auto');
+            });
+        }
+        
+    }
+
+    return {
+        // public functions
+        init: function() {
+            linksOpen();
+            linksFeedOpen();
+        },
+    };
+
+}();
+
+//scroll for list of elements
+
+var scrollList = function() {
+
+    var scrollStart = function() {
+        $('.scrollbar-inner').scrollbar();
+    }
+
+    var scrollWidget = function() {
+        $('.scrollbar-widget').scrollbar();
+    }
+
+    return {
+
+        init: function() {
+            scrollStart();
+            //scrollWidget();
+        },
+    };
+
+}();
+
+
+//equal height of elements
+
+var equal = function() {
+
+    var equalHeight = function() {
+        $('.equal').matchHeight();
+    }
+
+    return {
+
+        init: function() {
+            equalHeight();
+        },
+    };
+
+}();
+// masonry
+
+var masonryActive = function() {
+
+    var masonryAc = function() {
+        var Shuffle = window.Shuffle;
+        var element = document.querySelector('.my-shuffle-container');
+       // var sizer = element.querySelector('.my-sizer-element');
+
+        var shuffleInstance = new Shuffle(element, {
+            itemSelector: '.menu-item',
+            sizer: 200 // could also be a selector: '.my-sizer-element'
+        });
+    }
+
+    return {
+
+        init: function() {
+            masonryAc();
+        },
+    };
+
+}();
+
+//show or hide submenu when click
+var submenu = function() {
+
+    var submenuAction = function() {
+        $('.more_submenu').on('click', function () {
+            $('.block_more_submenu').toggleClass('active');
+        });
+    }
+
+    return {
+        init: function() {
+            submenuAction();
+        },
+    };
+
+}();
+
+/**
+ * Функция получает ширину нужного селектора делит на два и присваивает высоту
+ * @type {{init: heigth_blocks_x2w.init}}
+ * data-height-css="{css-свойство}" - установить свойство для блока
+ * data-height-item="content__body_main" - указать селектор с которого взять ширину и поделить на два
+ *
+ * Пример:
+ * data-height-item="content__body_main" и data-height-css="padding-top"
+ * установит для блока с атрибутом data-height-css style="padding-top: {ширина селектора content__body_main / 2};"
+ */
+var heigth_blocks_x2w = function() {
+
+    var heigth_blocks_x2w = function() {
+        if($('[data-height-css]')) {
+            var block = $('[data-height-css]');
+            var area_class = $(block).attr('data-height-item');
+            var area_css = $(block).attr('data-height-css');
+            if(area_class && area_css) {
+                var height_result = $('.' + area_class).width() / 2;
+                block.css(area_css, height_result);
+            }
+        }
+    }
+
+    return {
+        init: function() {
+            heigth_blocks_x2w();
+        },
+    };
+
+}();
+
+var Select2 = function() {
+
+    var base_select = function() {
+        $(document).ready(function () {
+            $('.select2').select2();
+        });
+    }
+
+    // multi select placeholder
+    // var multu_select = function() {
+    //     $(document).ready(function () {
+    //         $('.multi-select-placeholder').select2({
+    //             placeholder: this.getAttribute("placeholder") ? this.getAttribute("placeholder") : "Выбрать из списка",
+    //         });
+    //     });
+    // }
+
+    // multi select placeholder
+    var form_multu_select = function() {
+        $(document).ready(function () {
+            var placeholder = $('.multi-select-placeholder').each(function(i, el) {
+                var name = $(this).attr('name');
+                var placeholder = $(this).attr('placeholder');
+                $('[name="'+name+'"]').select2({
+                    placeholder: placeholder,
+                    multiple: true,
+                    //theme: "bootstrap-5",
+                });
+            });
+        });
+    }
+
+    return {
+        init: function() {
+            base_select();
+            //multu_select();
+            form_multu_select();
+        },
+    };
+
+}();
+
+var BootstrapSelect = function() {
+
+    var base_select = function() {
+        $(document).ready(function () {
+            $('.selectpicker').selectpicker();
+        });
+    }
+
+    return {
+        init: function() {
+            base_select();
+        },
+    };
+
+}();
+
+// Custom Сheckbox
+var Сheckbox = function() {
+
+    var keyup = function() {
+        $(window).keyup(function(e){
+            var target = $('.checkbox-btn input:focus');
+            if (e.keyCode == 9 && $(target).length){
+                $(target).parent().addClass('focused');
+            }
+        });
+    }
+
+    var focusout = function() {
+        $('.checkbox-btn input').focusout(function(){
+            $(this).parent().removeClass('focused');
+        });
+    }
+
+    return {
+        init: function() {
+            keyup();
+            focusout();
+        },
+    };
+
+}();
+
+// Custom FileInput
+var FileInput = function() {
+
+    var input = function() {
+        var fileInput    = document.querySelector('.input-file');
+        if (fileInput) {
+            var button       = document.querySelector('.input-file-trigger'),
+                result_class = fileInput.getAttribute('data-result-class'),
+                the_return   = document.querySelector('.'+result_class);
+
+            button.addEventListener('keydown', function(event) {
+                if (event.keyCode == 13 || event.keyCode == 32) {
+                    fileInput.focus();
+                }
+            });
+            button.addEventListener('click', function(event) {
+                fileInput.focus();
+                return false;
+            });
+            fileInput.addEventListener('change', function(event) {
+                var result = renderFile(fileInput.files[0]);
+                if(!the_return) {
+                    button.insertAdjacentHTML('afterEnd', result);
+                } else {
+                    the_return.innerHTML = result;
+                }
+            });
+        }
+    }
+
+    var bytesToSize = function(bytes) {
+        var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        if (bytes == 0) return '0 Byte';
+        var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+        return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+    }
+
+    var renderFile = function(file) {
+        var parts = file.name.split('.'), ext = 'Не определено', name = file.name;
+        if (parts.length > 1) ext = parts.pop(), name = file.name.split('.')[0];
+        return '<div class="file-result">' + name + ' (' + ext.toUpperCase() + ' - ' + bytesToSize(file.size) + ')</div>';
+    }
+
+    return {
+        init: function() {
+            input();
+        },
+    };
+
+}();
+
+// Ленивая загрузка (lazy loading)
+var LazyLoading = function() {
+
+    var waitForImages = function () {
+        /*! waitForImages jQuery Plugin 2018-02-13 */
+        !function(a){"function"==typeof define&&define.amd?define(["jquery"],a):"object"==typeof exports?module.exports=a(require("jquery")):
+            a(jQuery)}(function(a){var b="waitForImages",c=function(a){return a.srcset&&a.sizes}(new Image);a.waitForImages={
+                hasImageProperties:["backgroundImage","listStyleImage","borderImage","borderCornerImage","cursor"],hasImageAttributes:["srcset"]},
+            a.expr.pseudos["has-src"]=function(b){return a(b).is('img[src][src!=""]')},a.expr.pseudos.uncached=function(b){return!!a(b).is(":has-src")&&!b.complete},
+            a.fn.waitForImages=function(){var d,e,f,g=0,h=0,i=a.Deferred(),j=this,k=[],l=a.waitForImages.hasImageProperties||[],
+                m=a.waitForImages.hasImageAttributes||[],n=/url\(\s*(['"]?)(.*?)\1\s*\)/g;if(a.isPlainObject(arguments[0])?(f=arguments[0].waitForAll,
+                e=arguments[0].each,d=arguments[0].finished):1===arguments.length&&"boolean"===a.type(arguments[0])?f=arguments[0]:(d=arguments[0],
+                e=arguments[1],f=arguments[2]),d=d||a.noop,e=e||a.noop,f=!!f,!a.isFunction(d)||!a.isFunction(e))
+                    throw new TypeError("An invalid callback was supplied.");return this.each(function(){var b=a(this);f?b.find("*")
+                .addBack().each(function(){var b=a(this);b.is("img:has-src")&&!b.is("[srcset]")&&k.push({src:b.attr("src"),element:b[0]}),
+                    a.each(l,function(a,c){var d,e=b.css(c);if(!e)return!0;for(;d=n.exec(e);)k
+                    .push({src:d[2],element:b[0]})}),a.each(m,function(a,c){var d=b.attr(c);return!d||void k.push({src:b.attr("src"),
+                    srcset:b.attr("srcset"),element:b[0]})})}):b.find("img:has-src")
+                .each(function(){k.push({src:this.src,element:this})})}),g=k.length,h=0,0===g&&(d.call(j),
+                i.resolveWith(j)),a.each(k,function(f,k){var l=new Image,m="load."+b+" error."+b;a(l).one(m,function b(c){var f=[h,g,"load"==c.type];
+                if(h++,e.apply(k.element,f),i.notifyWith(k.element,f),a(this).off(m,b),h==g)return d.call(j[0]),i.resolveWith(j[0]),!1}),
+            c&&k.srcset&&(l.srcset=k.srcset,l.sizes=k.sizes),l.src=k.src}),i.promise()}});
+    }
+
+    var images = function() {
+        [].forEach.call(document.querySelectorAll('img[data-src]'), function(img) {
+            img.setAttribute('src', img.getAttribute('data-src'));
+            img.onload = function() {
+                img.removeAttribute('data-src');
+            };
+        });
+    }
+
+    var bg_images = function() {
+        if($('.img[data-bg-src]')) {
+            var item = '.img[data-bg-src]';
+            // Блики
+            $(document).ready(function () {
+                setInterval(function(){
+                    $(item).addClass('blink_on');
+                    setTimeout(function(){$(item).removeClass('blink_on')},900);
+                },900)
+            });
+            // Загрузка изображений и удаление аттрибута
+            [].forEach.call(document.querySelectorAll(item), function(img) {
+                img.setAttribute('style', 'background-image: url("' + img.getAttribute('data-bg-src') + '");');
+                $(item).waitForImages(function() {
+                    img.removeAttribute('data-bg-src');
+                }, $.noop, true);
+            });
+        }
+    }
+
+    return {
+        init: function() {
+            waitForImages();
+            images();
+            bg_images();
+        },
+    };
+}();
+
+// Табы bootstrap
+var BSTabs = function() {
+
+    var hash_open_tab = function() {
+        var hash = window.location.hash;
+        hash && $('ul.nav-tabs [data-bs-target="' + hash + '"]').tab('show');
+        return false; // Отменяем переход по стандартной ссылке.
+    }
+
+
+    return {
+        init: function() {
+            hash_open_tab();
+        },
+    };
+
+}();
+
+// Переключения по событиям
+var Toogle = function() {
+
+    var search_show = function() {
+        $('.search_toogle').click(function () {
+            $('.search_toogle').toggleClass("active");
+            $('.e-search').toggleClass("active");
+            $('.e-search__close').toggleClass("active");
+        });
+    }
+
+    var auth_show = function() {
+        $('.auth_widget_toogle').click(function () {
+            $('.auth_widget_toogle').toggleClass("active");
+            $('.auth_widget').toggleClass("active");
+            $('.auth_widget__close').toggleClass("active");
+        });
+    }
+
+
+    return {
+        init: function() {
+            search_show();
+            auth_show();
+        },
+    };
+
+}();
+
+// Действия с ссылками
+var Links = function() {
+
+    var target_blank = function() {
+        var a = document.getElementsByTagName('a'); // все ссылки на странице
+        for (var i = 0; i < a.length; i++) {
+            var host = a[i].host; // получаем HOST, указаный у ссылки
+            var href = a[i].getAttribute('href'); // значение атрибута href
+            var target = a[i].getAttribute('target'); // значение атрибута target
+
+            if (!target) {
+                if (href && href.includes('mailto:')) { // если ссылка содержит email
+                    a[i].setAttribute('target', '_blank'); // добавляем атрибут
+                }
+                if (host && host != location.host) { // если хост у ссылки отличается от текущего
+                    a[i].setAttribute('target', '_blank'); // добавляем атрибут
+                }
+            }
+        }
+    }
+
+    return {
+        init: function() {
+            target_blank();
+        },
+    };
+
+}();
+
+/**
+ * CKEDITOR init
+ */
+var ckedit = function() {
+    var ckeditor = function() {
+
+        CKEDITOR.replaceAll(function (textarea, config)
+        {
+            var skDiv = textarea.nextSibling;
+            if (!!skDiv && !!skDiv.classList  && skDiv.classList.contains("cke"))  return false;
+            if (textarea.classList.contains("skedit"))
+            {
+                config.toolbarGroups = [
+                    { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+                    { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+                    { name: 'forms', groups: [ 'forms' ] },
+                    { name: 'tools', groups: [ 'tools' ] },
+                    { name: 'others', groups: [ 'others' ] },
+                    { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+                    { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+                    { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+                    { name: 'insert', groups: [ 'insert' ] },
+                    { name: 'links', groups: [ 'links' ] },
+                    { name: 'styles', groups: [ 'styles' ] },
+                    { name: 'colors', groups: [ 'colors' ] },
+                    { name: 'about', groups: [ 'about' ] }
+                ];
+
+                config.filebrowserUploadMethod = 'form';
+                config.filebrowserImageUploadUrl = '/js/ckeditor4/upload.php?site='+$('.data-site-id').attr('data-attr');
+                config.filebrowserImageBrowseUrl = '/js/ckeditor4/browse.php?site='+$('.data-site-id').attr('data-attr');
+                config.height = '300px';
+                config.removeButtons = 'Save,NewPage,ExportPdf,Print,Templates,Preview,Copy,Cut,Paste,Redo,Undo,Replace,Find,Scayt,SelectAll,Radio,TextField,Textarea,Select,HiddenField,Checkbox,CopyFormatting,CreateDiv,BidiLtr,BidiRtl,Language,Anchor,Flash,Smiley,SpecialChar,PageBreak,Maximize,ShowBlocks,About,Subscript,Superscript,PasteFromWord,Styles,Outdent,Indent';
+                return true;
+            }
+            return false;
+        });
+    }
+    return {
+        init: function() {
+            ckeditor();
+        },
+    };
+}();
+/**
+ * end CKEDITOR init
+ */
+
+var subMenuAstrobl = function() {
+    var subMenu = function() {
+        function getWidth( )
+        {
+            withLi = 0;
+            $( '#menu_ul li' ).each(function( index ) {
+                withLi+= $(this).width()+16; //sum of widths
+            });
+            return withLi;
+        }
+        function updateNav()
+        {
+            var  btn =  $('#more');
+            var  vlinks = $('#menu_ul');
+            var widthMenu = vlinks.width(), btnWidth = btn.width() ;
+            var  hlinks = $('#menu_hide');
+
+            var withLi = 0;
+            var flag = -1 , flag_h = -1;
+            var html='', html_h='';
+            var countItems =  $( '#menu_ul li' ).length;
+
+            $( '#menu_ul li' ).each(function( index ) {
+                withLi+= $(this).width()+16; //sum of widths
+                if ($(this).attr("id") != "more" && index!=0)
+                {
+                    if (withLi>(widthMenu-200))
+                    {
+                        if  (flag==-1)  flag = index;
+                        html+='<li data-width="'+$(this).width()+'">'+$(this).html()+'</li>';
+                        $(this).remove();
+                    }
+                }
+            });
+
+            if (flag!=-1)
+            {
+                btn.show();
+                hlinks.prepend(html);
+                var withLi = 0;
+            }
+            if (flag==-1 && hlinks.children().length > 0 )
+            {
+                $( '#menu_hide li' ).each(function( index ) {
+                    widthMenu = vlinks.width();
+
+                    var  thisVidth = parseInt($(this).attr('data-width'));
+
+                    if (thisVidth+getWidth()+100<widthMenu)
+                    {
+                        vlinks.append('<li>'+$(this).html()+'</li>');
+                        $(this).remove();
+                    }
+                    else  return false;
+                });
+            }
+            if ($('#menu_hide').children().length == 0)
+            {
+                if (!!btn) btn.hide();
+                $('.overflow').hide();
+            }
+        }
+
+        $(window).resize(function() {
+            updateNav();
+        });
+
+        $('#more').click(function(){
+            $('.overflow').toggle();
+
+        });
+
+        $(document).mouseup(function(e)
+        {
+            var menuHide = $('#menu_hide');
+            var menuShow = $('#more');
+            if (!menuHide.is(e.target)
+                && menuHide.has(e.target).length === 0
+                && !menuShow.is(e.target)
+                && menuShow.has(e.target).length === 0
+            )
+            {
+                $('.overflow').hide();
+            }
+        });
+        updateNav();
+
+        $('#menu_ul').css('overflow', 'visible');
+    }
+
+    return {
+        init: function() {
+            subMenu();
+
+        },
+    };
+}();
+
+/**
+ * filepond init
+ */
+jQuery(function()
+{
+    // First register any plugins
+    jQuery.fn.filepond.registerPlugin(
+        FilePondPluginFileValidateType,
+        FilePondPluginFileValidateSize,
+        FilePondPluginImagePreview,
+        FilePondPluginImageCrop,
+        FilePondPluginImageResize,
+        FilePondPluginFileEncode,
+    );
+});
+/**
+ * end filepond init
+ */
+
+/**
+ * daterangepicker init
+ */
+var daysOfWeek = [ "Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб" ];
+var monthNames = [
+    "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+];
+var datePublished = "DD.MM.YYYY HH:mm";
+var dateDocument = "DD.MM.YYYY";
+
+var DateInterventionDateTimerangepicker = function() {
+    var DateInterventionDateTimerangepicker = function() {
+        $('input[name="intervention_datetime"], input[name="published_at"]').daterangepicker({
+
+            timePicker: true,
+            timePicker24Hour: true,
+            //startDate: moment().startOf('hour'),
+            //minYear: date.getFullYear(),
+            //minDate: date,
+            singleDatePicker: true,
+            showDropdowns: true,
+            autoUpdateInput: false,
+            "locale": {
+                "format": datePublished,
+                "separator": " - ",
+                "applyLabel": "Ок",
+                "cancelLabel": "Отмена",
+                "fromLabel": "От",
+                "toLabel": "По",
+                "weekLabel": "W",
+                "daysOfWeek": daysOfWeek,
+                "monthNames": monthNames,
+                "firstDay": 1
+            },
+
+        });
+    }
+    var setDatesDaterangepicker = function() {
+        $('input[name="intervention_datetime"], input[name="published_at"]').on('apply.daterangepicker', function(ev, picker) {
+
+            $(this).val(picker.startDate.format(datePublished));
+        });
+    }
+    var cancelDatesDaterangepicker = function() {
+        $('input[name="intervention_datetime"], input[name="published_at"]').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+        });
+    }
+    return {
+        init: function() {
+            DateInterventionDateTimerangepicker();
+            setDatesDaterangepicker();
+            cancelDatesDaterangepicker();
+        },
+    };
+}();
+
+var ClearDatesDaterangepicker = function() {
+    var clearDatesDaterangepicker = function() {
+        var input = $('input[name="date"], input[name="date_issue_certificate"]');
+        input.daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            autoUpdateInput: false,
+            maxYear: date.getFullYear() + 1,
+            minYear: 1980,
+            isInvalidDate: function(date) {
+                if (input.attr("data-avalible-dates") != null) {
+                    var avalible_dates = JSON.parse(input.attr("data-avalible-dates"));
+                    var result = Object.values(avalible_dates);
+                    if(typeof result != undefined && result !== null) {
+                        if (result.indexOf(date.format("DD.MM.YYYY")) < 0) {
+                            return true;
+                        }
+                    }
+                }
+            },
+            isCustomDate: function (date) {
+                if (input.attr("data-avalible-dates") != null) {
+                    var avalible_dates = JSON.parse(input.attr("data-avalible-dates"));
+                    var result = Object.values(avalible_dates);
+                    if(typeof result != undefined && result !== null) {
+                        if (result.indexOf(date.format("DD.MM.YYYY")) > -1) {
+                            return 'active-date';
+                        }
+                    }
+                }
+            },
+            "locale": {
+                "format": dateDocument,
+                "separator": " - ",
+                "applyLabel": "Ок",
+                "cancelLabel": "Отмена",
+                "fromLabel": "От",
+                "toLabel": "По",
+                "weekLabel": "W",
+                "daysOfWeek": daysOfWeek,
+                "monthNames": monthNames,
+                "firstDay": 1
+            },
+            
+        });
+    }
+    
+    var setDatesDaterangepicker = function() {
+        $('input[name="date"], input[name="date_issue_certificate"]').on('apply.daterangepicker', function(ev, picker) {
+
+            $(this).val(picker.startDate.format(dateDocument));
+        });
+    }
+    var cancelDatesDaterangepicker = function() {
+        $('input[name="date"], input[name="date_issue_certificate"]').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+        });
+    }
+
+    var periodDatesDaterangepicker = function() {
+        $('#period').daterangepicker({
+            "locale": {
+                "format": "DD.MM.YYYY",
+                "separator": " - ",
+                "applyLabel": "Ок",
+                "cancelLabel": "Очистить",
+                "fromLabel": "От",
+                "toLabel": "До",
+                "customRangeLabel": "Произвольный",
+                "weekLabel": "W",
+                "daysOfWeek": daysOfWeek,
+                "monthNames": monthNames,
+                "firstDay": 1
+            },
+            "autoUpdateInput": false,
+        });
+
+        $('#period').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('DD.MM.YYYY') + ' - ' + picker.endDate.format('DD.MM.YYYY'));
+        });
+
+        $('#period').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+        });
+    }
+
+    return {
+        init: function() {
+            clearDatesDaterangepicker();
+            setDatesDaterangepicker();
+            cancelDatesDaterangepicker();
+            periodDatesDaterangepicker();
+        },
+    };
+}();
+
+/**
+ * end daterangepicker init
+ */
+
+// Подсказки
+var TooltipStart = function() {
+
+    var base = function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    }
+
+    var tooltip = function() {
+        $('a[data-toggle="tooltip"]').tooltip({
+            animated: 'fade',
+            placement: 'bottom',
+            html: true
+        });
+    }
+
+    return {
+        init: function() {
+            base();
+            tooltip();
+        },
+    };
+
+}();
+
+// Маска для полей
+var MaskFields = function() {
+
+    var mobile_phone = function() {
+        if ($('[data-mask="phone"]').length !== 0) {
+            $('[data-mask="phone"]').mask('+7(999)999-99-99');
+        }
+    }
+
+    return {
+        init: function() {
+            mobile_phone();
+        },
+    };
+}();
+
+var TableScroll = function() {
+
+    var tableXScroll = function () {
+        var tables = document.querySelectorAll('table');
+        if(tables.length >= 1) {
+            tables.forEach(function(table, i) {
+                wrapper = document.createElement('section');
+                wrapper.setAttribute('class', 'table-scroll px-2');
+                table.parentNode.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            });
+        }
+    }
+
+    return {
+        // public functions
+        init: function() {
+            tableXScroll();
+        },
+    };
+}();
+
+// Init scripts on load Document
+jQuery(document).ready(function() {
+    Sliders.init();
+    scrollWindow.init();
+    LazyLoading.init();
+    lightGallery.init();
+    VibrantImage.init();
+    hamburgerMenu.init();
+    subMenuAstrobl.init();
+    shareLinks.init();
+    scrollList.init();
+    Links.init();
+    submenu.init();
+    Toogle.init();
+    equal.init();
+    Select2.init();
+    BootstrapSelect.init();
+    Сheckbox.init();
+    FileInput.init();
+    heigth_blocks_x2w.init();
+    BSTabs.init();
+    TooltipStart.init();
+    //ckedit.init();
+    DateInterventionDateTimerangepicker.init();
+    ClearDatesDaterangepicker.init();
+    MaskFields.init();
+    TableScroll.init();
+    //  masonryActive.init();
+});
+
+// Init scripts on load AjaxSuccess
+jQuery(document).ajaxSuccess(function() {
+    equal.init();
+    Select2.init();
+    BootstrapSelect.init();
+    Сheckbox.init();
+    Links.init()
+    TooltipStart.init();
+    MaskFields.init();
+    LazyLoading.init();
+    //ckedit.init();
+});
+
+

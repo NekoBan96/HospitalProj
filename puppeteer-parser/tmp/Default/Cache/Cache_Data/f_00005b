@@ -1,0 +1,890 @@
+//console.log('ajax-action');
+
+var setInnerHTML = function(elm, html, add_data) {
+
+    if (add_data==1)
+    {
+        elm.innerHTML += html;
+    }
+    else
+    {
+        Array.from(elm.querySelectorAll("script")).forEach( oldScript => {
+            const newScript = document.createElement("script");
+            Array.from(oldScript.attributes)
+                .forEach( attr => newScript.setAttribute(attr.name, attr.value) );
+            newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+            oldScript.parentNode.replaceChild(newScript, oldScript);
+        });
+
+        elm.innerHTML = html;
+    }
+
+}
+
+function objectifyForm(formArray) {
+
+    var returnArray = {};
+    for (var i = 0; i < formArray.length; i++){
+        returnArray[formArray[i]['name']] = formArray[i]['value'];
+    }
+
+    return returnArray;
+}
+
+function getAttributes(elem)
+{
+    var dataAttr =
+        {
+            request : elem.attr('data-request'),
+            confirm : elem.attr('data-request-confirm'),
+            redirect : elem.attr('data-request-redirect'),
+            update : elem.attr('data-request-update'),
+            data : elem.attr('data-request-data'),
+            method: elem.attr('data-method'),
+            add_data: elem.attr('data-data-add'),
+            isModalForm: elem.attr('data-request-modal'),
+            request_form_name: elem.attr('data-request-form-name'),
+            request_form_id: elem.attr('data-request-form-id'),
+            request_form_delete : elem.attr('data-request-delete'),
+            request_form_count : elem.attr('data-request-form-count'),
+            debug : elem.attr('data-request-debug'),
+        };
+    return dataAttr;
+}
+
+function makeObjectFromString(data)
+{
+    var properties = data.split(',');
+    var obj = {};
+    properties.forEach(function(property) {
+        var item = property.split(':');
+        obj[item[0]] = item[1];
+    });
+    return obj;
+}
+
+function new_makeObjectFromString(data)
+{
+    var properties = data.split('&');
+    var obj = {};
+    properties.forEach(function(property) {
+        var item = property.split(':');
+        obj[item[0]] = item[1];
+    });
+    return obj;
+}
+
+function clearIdString(view)
+{
+    var   ob = view.replace(/['"#]/g, '');
+    ob = ob.replace(/\s+/g, '');
+    return ob;
+}
+
+
+function sendAjaxForm(method, dataAttr, dataAll, elem)
+{
+    if (dataAttr.update)
+    {
+        var viewPartial = dataAttr.update.split(':');
+        view = viewPartial[0];
+        /* var additionalInfo = {
+             view: view,
+         };
+         dataAll = $.extend(dataAll, additionalInfo);
+         */
+        dataAll.append('view',view);
+    }
+
+    if (dataAttr.data)
+    {
+        var obj = null;
+
+        if (dataAttr.request_form_name === "send_form1"
+            || dataAttr.request_form_name === 'form_select'
+            || dataAttr.request_form_name === 'form_textarea'
+            || dataAttr.request_form_name === "send_form3"
+            || dataAttr.request_form_name === 'form_button_next'
+            || dataAttr.request_form_name === 'button_next'
+            || dataAttr.request_form_name === 'form_send'
+            || dataAttr.request_form_name === 'form_button_prev') {
+            obj = new_makeObjectFromString(dataAttr.data);
+        } else {
+            obj = makeObjectFromString(dataAttr.data);
+        }
+
+        // dataAll = $.extend(dataAll, obj);
+        for ( var key in obj ) {
+            dataAll.append(key, obj[key]);
+        }
+    }
+
+    var buttonDis = document.querySelector('[form='+elem.attr('id')+']');
+    if (!!buttonDis)  buttonDis.setAttribute("disabled", true);
+
+    var add_data = 0;
+    if (dataAttr.add_data) add_data = 1;
+
+    let loader = document.getElementById('loader');
+
+    $.ajax({
+        type: method,
+        url: dataAttr.request,
+        data: dataAll,
+        processData: false,
+        contentType: false,
+        success: function(data){
+
+            if (viewPartial && viewPartial[1])
+            {
+                var ob  = clearIdString(viewPartial[1]);
+                if (data.success)
+                {
+                    $('#alertForm').remove();
+                    var isModal = document.getElementsByClassName('modal');
+                    if (isModal.length > 0)
+                    {
+                        $('.modal').modal('hide');
+                        if (!!buttonDis) buttonDis.removeAttribute("disabled");
+                    }
+                    if (data.data)
+                    {
+
+                        // document.getElementById(ob).innerHTML = data.data;
+                        setInnerHTML(document.getElementById(ob), data.data, add_data);
+                    }
+                    //else if (data)  document.getElementById(ob).innerHTML = data;
+                }
+                else if (!!data)
+                {
+                    $('#alertForm').remove();
+                    var isModal = document.getElementsByClassName('modal');
+                    if (isModal.length > 0)
+                    {
+                        $('.modal').modal('hide');
+                        if (!!buttonDis) buttonDis.removeAttribute("disabled");
+                        //  document.getElementById(ob).innerHTML = data ;
+                        setInnerHTML(document.getElementById(ob), data, add_data);
+                    } else {
+                        setInnerHTML(document.getElementById(ob), data, add_data);
+                    }
+                }
+
+
+            }
+            if (dataAttr.redirect)
+            {
+                window.location.replace(dataAttr.redirect);
+            }
+        },
+        beforeSend: function() {
+            if (loader) {
+                loader.classList.add('d-flex');
+                loader.classList.remove('d-none');
+            }
+        },
+        complete: function() {
+            if (loader) {
+                loader.classList.add('d-none');
+                loader.classList.remove('d-flex');
+            }
+        },
+        error: function(xhr, status, error)
+        {
+            var htmlError="";
+            $('#alertForm').remove();
+            $.each(xhr.responseJSON.errors, function (key, item)
+            {
+                htmlError+= "<p>"+item+"</p>";
+
+            });
+
+            var modalBody = elem.find('.modal-body');
+            if (!!modalBody)
+            {
+                modalBody.prepend("<div id='alertForm' class='alert alert-danger'>"+htmlError+"</div>");
+            }
+            else
+            {
+                elem.prepend("<div id='alertForm' class='alert alert-danger'>"+htmlError+"</div>");
+            }
+
+            $('#alertForm')[0].scrollIntoView({behavior: "smooth"});
+            if (!!buttonDis) buttonDis.removeAttribute("disabled");
+        }
+    });
+}
+
+
+function sendAjax(method, dataAttr, _token, value = null)
+{
+    view = null;
+    if (dataAttr.update) {
+        var viewPartial = dataAttr.update.split(':');
+        view = viewPartial[0];
+    }
+    if (method != "GET" && method != "get") {
+        var dataAll = {
+            _token: _token,
+            view: view,
+            value: value,
+        };
+    } else {
+        var dataAll = {
+            _token: _token,
+            view: view,
+            value: value,
+        };
+    }
+
+    if (dataAttr.data) {
+        var obj = null;
+        if (dataAttr.request_form_name === 'step1_type_form'
+            || dataAttr.request_form_name === 'form_authorities_type'
+            || dataAttr.request_form_name === 'form_button_next'
+            || dataAttr.request_form_name === 'button_next'
+            || dataAttr.request_form_name === 'form_send'
+            || dataAttr.request_form_name === 'form_button_prev') {
+            obj = new_makeObjectFromString(dataAttr.data);
+        } else {
+            obj = makeObjectFromString(dataAttr.data);
+        }
+        dataAll = $.extend(dataAll, obj);
+    }
+
+    var add_data = 0;
+    if (dataAttr.add_data) add_data= 1;
+
+    let loader = document.getElementById('loader');
+
+    $.ajax({
+        type: method,
+        url: dataAttr.request,
+        data: dataAll,
+        success: function(data){
+            if(dataAttr.debug === 'true') {
+                console.log(data);
+            }
+            if (viewPartial && viewPartial[1])
+            {
+                var ob  = clearIdString(viewPartial[1]);
+                if (data.success)
+                {
+                    var isModal = document.getElementsByClassName('modal');
+                    if (isModal.length > 0)
+                    {
+                        $('.modal').modal('hide');
+                    }
+                    if (data.data)
+                    {
+                        //  document.getElementById(ob).innerHTML = data.data;
+                        setInnerHTML(document.getElementById(ob), data.data, add_data);
+                    }
+                }
+                else if (!!data)
+                {
+                    $('#alertForm').remove();
+                    var isModal = document.getElementsByClassName('modal');
+                    if (isModal.length > 0)
+                    {
+                        $('.modal').modal('hide');
+
+                        //document.getElementById(ob).innerHTML = data ;
+                        setInnerHTML(document.getElementById(ob), data , add_data);
+                    } else {
+                        setInnerHTML(document.getElementById(ob), data , add_data);
+                    }
+                }
+            }
+            if (dataAttr.redirect) {
+                window.location.replace(dataAttr.redirect);
+            }
+        },
+        beforeSend: function() {
+            if (loader) {
+                loader.classList.add('d-flex');
+                loader.classList.remove('d-none');
+            }
+        },
+        complete: function() {
+            if (loader) {
+                loader.classList.add('d-none');
+                loader.classList.remove('d-flex');
+            }
+        },
+    });
+}
+
+
+
+var ajaxForm = function() {
+
+    var ajaxFormRequest = function() {
+        //  $('form[data-request]').submit(function(event) {
+        $(document).on("submit", "form[data-request]" , function(event) {
+            // $('form[data-request]').on("submit", function(event) {
+            event.preventDefault();
+
+            var elem = $(this);
+            var isConfirmed = -1 ;
+            var view='';
+
+            if (elem.attr('data-request'))
+            {
+                var dataAttr = getAttributes(elem);
+                if (dataAttr.method) var method = dataAttr.method;
+                else var method = "POST";
+
+                if (dataAttr.request)
+                {
+                    //   var dataAll =  objectifyForm(elem.serializeArray());
+                    var dataAll = new FormData(this);
+                    if (dataAttr.confirm)
+                    {
+                        //  isConfirm  = confirm(dataAttr.confirm);
+                        swal({
+                            title: dataAttr.confirm,
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Р”Р°",
+                            cancelButtonText: "РќРµС‚",
+                        }).then((result) => {
+                            if ( result.value) {
+                                sendAjaxForm(method, dataAttr, dataAll, elem);
+                            }
+                        });
+                    }
+                    else isConfirmed =  1 ;
+
+                    if (isConfirmed==1)
+                    {
+                        sendAjaxForm(method, dataAttr, dataAll, elem);
+                    }
+                }
+            }
+        });
+    }
+
+    return {
+        // public functions
+        init: function() {
+            ajaxFormRequest();
+        },
+    };
+
+}();
+
+var ajaxButton = function() {
+
+    var ajaxButtonRequest = function() {
+
+        $(document).on('click', 'a[data-request], button[data-request], input[type=button][data-request], input[type=submit][data-request]', function(event)
+        {
+            event.preventDefault();
+            var elem = $(this);
+            var isConfirmed = -1 ;
+            var _token = $('meta[name="csrf-token"]').attr('content');
+            var view='';
+            if (elem.attr('data-request'))
+            {
+                var dataAttr = getAttributes(elem);
+
+                if (dataAttr.method) var method = dataAttr.method;
+                else var method = "POST";
+
+                // кнопка "Следующий шаг" для отправки формы
+                if (dataAttr.request_form_name === 'form_button_next') {
+                    sendFormButtonNext(method, dataAttr);
+                }
+                // кнопка "Удалить файл"
+                if (dataAttr.request_form_name === 'field_file_delete') {
+                    sendFormButtonNext(method, dataAttr);
+                }
+                // кнопка "Отправить"
+                if (dataAttr.request_form_name === 'form_send') {
+                    let arrAttr = [];
+                    let data = new_makeObjectFromString(dataAttr.data);
+                    data['form_send'] = true;
+                    for (var key in data) {
+                        str = key + ":" + data[key];
+                        arrAttr.push(str);
+                    }
+                    dataAttr.data = arrAttr.join("&");
+                }
+
+                if (dataAttr.request)
+                {
+                    if (dataAttr.confirm)
+                    {
+                        //  isConfirm  = confirm(dataAttr.confirm);
+                        swal({
+                            title: dataAttr.confirm,
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Р”Р°",
+                            cancelButtonText: "РќРµС‚",
+                        }).then((result) => {
+                            if ( result.value) {
+                                sendAjax(method, dataAttr,_token);
+                            }
+                        });
+                    }
+                    else isConfirmed =  1;
+
+                    if (isConfirmed==1 && !dataAttr.request_form_name
+                        || dataAttr.request_form_name === 'step1_type_form'
+                        || dataAttr.request_form_name === 'form_authorities_type'
+                        || dataAttr.request_form_name === 'form_send'
+                        || dataAttr.request_form_name === 'button_next'
+                        || dataAttr.request_form_name === 'form_button_prev')
+                    {
+                        sendAjax(method, dataAttr, _token);
+                    }
+                }
+            }
+        });
+    }
+
+    return {
+        // public functions
+        init: function() {
+            ajaxButtonRequest();
+        },
+    };
+
+}();
+
+var ajaxSelect = function() {
+
+    var ajaxSelectRequest = function () {
+        $(document).on('change', 'select[data-request]', function(event) {
+            event.preventDefault();
+            var elem = $(this);
+            var _token = $('meta[name="csrf-token"]').attr('content');
+            var value = elem.val();
+            if (elem.attr('data-request')) {
+
+                var dataAttr = getAttributes(elem);
+                if (dataAttr.method) var method = dataAttr.method;
+                else var method = "POST";
+
+                if (dataAttr.request_form_name === 'form_select') {
+                    sendFormButtonNext(method, dataAttr);
+                } else {
+                    sendAjax(method, dataAttr, _token, value);
+                }
+            }
+        });
+    };
+
+    return {
+        // public functions
+        init: function() {
+            ajaxSelectRequest();
+        },
+    };
+}();
+
+var ajaxScroll = function() {
+
+    var ajaxScrollRequest = function () {
+        var elements = $("div[data-request-lazzy]");
+        $.each(elements, function(index) {
+            var _token = $('meta[name="csrf-token"]').attr('content');
+            if($(this).data('request')) {
+                var dataAttr = getAttributes($(this));
+                var method = dataAttr.method ? dataAttr.method : 'POST';
+                sendAjax(method, dataAttr, _token, null);
+            }
+        });
+    };
+
+    return {
+        // public functions
+        init: function() {
+            ajaxScrollRequest();
+        },
+    };
+}();
+
+var ajaxTextarea = function() {
+
+    var LimitAndCountCharactersTextarea = function () {
+
+        $(document).on('keyup', 'textarea[data-request]', function(event) {
+
+            event.preventDefault();
+            var elem = $(this);
+            var dataAttr = getAttributes(elem);
+            var _token = $('meta[name="csrf-token"]').attr('content');
+            var viewPartial = dataAttr.update.split(':');
+            var view = viewPartial[0];
+            var dataAll = {view: view};
+            var ob = clearIdString(viewPartial[1]);
+
+            if (dataAttr.method) var method = dataAttr.method;
+            else var method = "POST";
+
+            var field_message = document.getElementById('field_message');
+            var request_form_count = parseInt(dataAttr.request_form_count);
+            var field_message_length = field_message.value.length;
+            var textRemaining = request_form_count - field_message_length;
+
+            if (dataAttr.data) {
+                var obj = null;
+                obj = new_makeObjectFromString(dataAttr.data);
+                for (var key in obj) {
+                    dataAll = $.extend(dataAll, obj);
+                }
+            }
+
+            dataAll['count_message'] = textRemaining;
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': _token,
+                },
+                type: method,
+                url: dataAttr.request,
+                cache: false,
+                data: dataAll,
+                success: function (data) {
+                    document.getElementById(ob).innerHTML = textRemaining + " симв.";
+                }
+            });
+        });
+
+    };
+
+    return {
+        init: function() {
+            LimitAndCountCharactersTextarea();
+        },
+    };
+
+}();
+
+var ajaxFile = function() {
+
+    var ajaxSendFile = function(elem) {
+
+        var file_loader = document.getElementById('file_loader');
+        var dataAll;
+        var dataAttr = getAttributes(elem);
+        var arrAttr = [];
+        var request_form;
+        if (dataAttr.request_form_delete) {
+            request_form = dataAttr.request_form_delete;
+        } else {
+            request_form = dataAttr.request;
+        }
+        var _token = $('meta[name="csrf-token"]').attr('content');
+        if (dataAttr.method) var method = dataAttr.method;
+        else var method = "POST";
+        var viewPartial = dataAttr.update.split(':');
+        view = viewPartial[0];
+        var ob = clearIdString(viewPartial[1])
+
+        var stringData = dataAttr.data.split('&');
+        var arrData = [];
+        for (var key in stringData) {
+            var arr = stringData[key].split(':');
+            arrData[arr[0]] = arr[1];
+        }
+
+        if (window.FormData === undefined) {
+            alert('В вашем браузере FormData не поддерживается')
+        } else {
+            dataAll = new FormData(document.getElementById(dataAttr.request_form_id));
+        }
+
+        if (elem.attr('data-request')) {
+            $.each($("#" + dataAttr.request_form_name)[0].files, function (key, input) {
+                dataAll.append(dataAttr.request_form_name, input);
+                dataAll.append('_token', _token);
+                dataAll.append('view', view);
+            });
+        } else if (elem.attr('data-request-delete')) {
+            dataAll.append('_token', _token);
+            dataAll.append('view', view);
+            dataAll.append('delete_file', elem.attr('data-delete-file'));
+        }
+
+        /**************************** MESSAGE COUNT CHARACTERS ******************************/
+        var field_message = document.getElementById('field_message');
+        if (field_message.value !== '') {
+
+            var maxLength = parseInt(field_message.getAttribute('maxlength'));
+            var request_form_count = parseInt(dataAttr.request_form_count);
+            var field_message_length = field_message.value.length;
+            var textRemaining;
+
+            if (arrData["count_message"]) {
+                textRemaining = request_form_count - field_message_length;
+                for (var key in arrData) {
+                    dataAll.has(arrData[key])
+                    {
+                        if (dataAll.get(key) && arrData[key] != dataAll.get(key)) {
+                            str = key + ":" + dataAll.get(key);
+                        } else {
+                            if (key === 'count_message') {
+                                str = key + ":" + textRemaining;
+                            } else {
+                                str = key + ":" + arrData[key];
+                            }
+                        }
+                    }
+                    arrAttr.push(str);
+                }
+                dataAttr.data = arrAttr.join("&");
+
+            } else {
+                textRemaining = maxLength - field_message_length;
+                dataAll.append('count_message', textRemaining);
+            }
+        }
+        /************************** END MESSAGE COUNT CHARACTERS ******************************/
+
+        if (dataAttr.data) {
+            var obj = null;
+            if (dataAttr.request_form_name === 'field_files') {
+                obj = new_makeObjectFromString(dataAttr.data);
+            } else {
+                obj = makeObjectFromString(dataAttr.data);
+            }
+            for (var key in obj) {
+                dataAll.append(key, obj[key]);
+            }
+        }
+
+        $.ajax({
+            type: method,
+            url: request_form,
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: dataAll,
+            beforeSend: function() {
+                if (file_loader) {
+                    file_loader.classList.add('d-flex');
+                    file_loader.classList.remove('d-none');
+                }
+            },
+            complete: function() {
+                if (file_loader) {
+                    file_loader.classList.add('d-none');
+                    file_loader.classList.remove('d-flex');
+                }
+            },
+            success: function (data) {
+                setInnerHTML(document.getElementById(ob), data);
+            }
+        });
+    };
+
+    var ajaxFileRequest = function () {
+
+        $(document).on('change', 'input[type=file][data-request]', function(event) {
+            event.preventDefault();
+            ajaxSendFile($(this));
+        });
+
+        $(document).on('click', 'a[data-request-delete]', function(event) {
+            event.preventDefault();
+            ajaxSendFile($(this));
+        });
+    };
+
+    return {
+        // public functions
+        init: function() {
+            ajaxFileRequest();
+        },
+    };
+}();
+
+$( document ).ready(function() {
+    ajaxForm.init();
+    ajaxButton.init();
+    ajaxSelect.init();
+    ajaxTextarea.init();
+    ajaxFile.init();
+    ajaxScroll.init();
+});
+$(document).ajaxSuccess(function() {
+    // ajaxForm.init();
+    // ajaxButton.init();
+});
+
+// ФОРМА ОБРАЩЕНИЯ НА САЙТЕ LETTERS
+var sendFormButtonNext = function (method, dataAttr) {
+
+    var errors = [];
+
+    if (document.getElementById(dataAttr.request_form_id)) {
+
+        var form = document.getElementById(dataAttr.request_form_id);
+        var arrAttr = [];
+        var dataAll = new FormData(document.getElementById(dataAttr.request_form_id));
+        var stringData = dataAttr.data.split('&');
+        var arrData = [];
+        for (var key in stringData) {
+            var arr = stringData[key].split(':');
+            arrData[arr[0]] = arr[1];
+        }
+
+        var page = parseInt(arrData['page']);
+        var page_next = page + 1;
+
+        // required fields
+
+        // STEP1
+        if (dataAttr.request_form_id === 'send_form1') {
+            var field_surname = form.querySelector(['[name="field_surname"]']);
+            field_surname.setAttribute('data-required', 'required');
+            var field_name = form.querySelector(['[name="field_name"]']);
+            field_name.setAttribute('data-required', 'required');
+            var field_email = form.querySelector(['[name="field_email"]']);
+            // проверка на ввод email
+            var emailRegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if (field_email) {
+                field_email.setAttribute('data-required', 'required');
+                valEmail = emailRegExp.test(field_email.value);
+                if (field_email.value !== '' && !valEmail) {
+                    errors.push("Поле 'Email' неверный формат.");
+                }
+            }
+            var field_jur_name = form.querySelector(['[name="field_jur_name"]']);
+            if (field_jur_name) {
+                field_jur_name.setAttribute('data-required', 'required');
+            }
+            var field_jur_address = form.querySelector(['[name="field_jur_address"]']);
+            if (field_jur_address) {
+                field_jur_address.setAttribute('data-required', 'required');
+            }
+            var field_inn = form.querySelector(['[name="field_inn"]']);
+            if (field_inn) {
+                field_inn.setAttribute('data-required', 'required');
+                if (field_inn.value !== '') {
+                    if (!parseInt(field_inn.value) || (field_inn.value.length < 10 || field_inn.value.length > 12)) {
+                        errors.push("Поле 'ИНН' неверный формат.");
+                    }
+                }
+            }
+            var field_ogrn = form.querySelector(['[name="field_ogrn"]']);
+            if (field_ogrn) {
+                field_ogrn.setAttribute('data-required', 'required');
+                if (field_ogrn.value !== '') {
+                    if (!parseInt(field_ogrn.value) || field_ogrn.value.length !== 13) {
+                        errors.push("Поле 'ОГРН' неверный формат.");
+                    }
+                }
+            }
+        }
+        // END STEP1
+
+        // STEP2
+        if (dataAttr.request_form_id === 'send_form2') {
+            var field_email_code = form.querySelector(['[name="field_email_code"]']);
+            field_email_code.setAttribute('data-required', 'required');
+            if (field_email_code) {
+                if (arrData['email_code'] !== field_email_code.value && field_email_code.value !== '') {
+                    errors.push("Вы ввели неверный пароль. Проверьте Ваш электронный почтовый ящик.");
+                }
+            }
+        }
+        // END STEP2
+
+        // STEP3
+        if (dataAttr.request_form_id === 'send_form3') {
+
+            var stop = false;
+
+            if (dataAttr.request_form_name === 'form_select' || dataAttr.request_form_name === 'form_textarea') {
+                stop = true;
+            }
+
+            var field_message = document.getElementById('field_message');
+
+            if (field_message) {
+
+                field_message.setAttribute('data-required', 'required');
+                field_message.setAttribute('maxlength', 2000);
+
+                if (field_message.value === '') {
+                    stop = true;
+                } else if (field_message.value.length > 2000) {
+                    stop = true;
+                    errors.push("Текст обращения привышает лимит в 2000 символов!");
+                }
+
+                if (field_message.value !== '') {
+
+                    var maxLength = parseInt(field_message.getAttribute('maxlength'));
+                    var field_message_length = field_message.value.length;
+                    var textRemaining = maxLength - field_message_length;
+
+                    if (arrData["count_message"]) {
+                        arrData["count_message"] = textRemaining;
+                    } else {
+                        arrAttr.push("count_message:" + textRemaining);
+                    }
+                }
+            }
+        }
+        // END STEP3
+
+        // STEP4
+        // here
+        // END STEP4
+
+        var requireds = form.querySelectorAll('[data-required="required"]');
+        var error = [];
+        requireds.forEach((element, index) => {
+            if (element.value === '' && dataAttr.request_form_name !== 'form_select') {
+                var name = element.getAttribute('id');
+                var title = element.getAttribute('title');
+                errors.push("Поле '"+title+"' обязательно для заполнения.");
+            }
+        });
+
+        errors = errors.join("|");
+        // required fields end
+
+        if (errors.length === 0 && !stop) {
+            arrData['page'] = page_next;
+            dataAttr.update = "pages.steps.step"+page_next+":'#steps'";
+        } else {
+            arrData['page'] = page;
+            dataAttr.update = "pages.steps.step"+page+":'#steps'";
+        }
+
+        for (var key in arrData) {
+            dataAll.has(arrData[key])
+            {
+                if (dataAll.get(key) && arrData[key] != dataAll.get(key)) {
+                    str = key + ":" + dataAll.get(key);
+                } else if (dataAll.get(key+'[]') && arrData[key] != dataAll.getAll(key+'[]')) {
+                    str = key + ":" + dataAll.getAll(key+'[]').join("|");
+                } else {
+                    if (dataAll.get(key) !== '') {
+                        str = key + ":" + arrData[key];
+                    }
+                }
+                arrAttr.push(str);
+            }
+        }
+
+        if (errors.length !== 0) {
+            arrAttr.push("errors:"+errors);
+        }
+
+        dataAttr.data = arrAttr.join("&");
+        //console.log(dataAttr);
+
+        var elem = $(this);
+        sendAjaxForm(method, dataAttr, dataAll, elem);
+    }
+}
