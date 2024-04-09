@@ -18,10 +18,12 @@ let uploadFile = function (req, res, id) {
 
   let sampleFile = req.files.file; 
   const fileName = req.body.name;  
+  const fileExtension = req.body.fileExtension;
+  console.log(fileExtension);
 
   try {
-    fsp.writeFile(`./library/${id}.pdf`, sampleFile.data)
-  } catch(err){throw err}
+    fsp.writeFile(`./library/${id}.${fileExtension}`, sampleFile.data)
+  } catch(err){console.log(err);}
   console.log("save done");
 }
 
