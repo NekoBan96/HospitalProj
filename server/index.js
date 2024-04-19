@@ -1,37 +1,27 @@
-const express = require('express');
+const PORT = process.env.PORT || 5000;
+const express = require("express");
 const app = express();
-
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static('library'))
+var bodyParser = require("body-parser");
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+app.use(bodyParser.json());
 
-const fileUpload = require('express-fileupload')
-app.use(fileUpload({ defCharset: 'utf8', defParamCharset: 'utf8' }));
+const fileUpload = require("express-fileupload");
+app.use(fileUpload({ defCharset: "utf8", defParamCharset: "utf8" }));
 
-cors = require('cors')
-app.use(cors())
+const cors = require("cors");
+app.use(cors());
 
-const userRoutes = require('./routes/userRouter')
-app.use('/users', userRoutes);
+const hospitalRouter = require("./routes/dbRouter");
+app.use("/db", hospitalRouter);
 
-const uploadRoutes = require('./routes/uploadRouter')
-app.use('/upload', uploadRoutes);
+const uploadRouter = require("./routes/uploadRouter");
+app.use("/upload", uploadRouter);
 
-const dbRouter = require('./routes/dbRouter');
-app.use('/db', dbRouter);
-
-const PORT = 5000
-app.listen(PORT, function () {
-    console.log(`server listen: http://localhost:${PORT}`);
-});
-
-/* 
-добавление файла на сервер
-    получить файл и айди девайса
-    проверить есть ли такой девайс по айди
-    добавить в бд пункт есть ли файл
-    залить файл в либрари
-    балдеж
-
-*/
+app.listen(PORT, () => console.log(`server started on port ${PORT}`));

@@ -2,7 +2,7 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-    isAuth: false,
+    isAuth: true,
     token: ''
   },
   getters: {

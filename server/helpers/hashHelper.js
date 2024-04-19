@@ -13,7 +13,7 @@ const scryptHash = async function (string, salt) {
 }
 
 exports.scryptHash = scryptHash;
-//hashHelper.scryptHash(string).then(hash => console.log(hash))
+//hashHelper.scryptHash(string).then(hash => console.log(hash))  - промис
 
 exports.scryptVerify = async function(testString, hashAndSalt) {
     const [, salt] = hashAndSalt.split(":")
@@ -21,3 +21,4 @@ exports.scryptVerify = async function(testString, hashAndSalt) {
 }
 
 //hashHelper.scryptVerify(string, '06854781ef2893e2d209833eb8f6e30d22e11af599082c6bae2d9d44fe4d6524:e63f7a8b4d9d6b4acf23dbf4f9a6a883').then(isValid => console.log(isValid))
+// здесь нужно сначала указать пароль который ввел пользователь а после хеш хранящийся в бд

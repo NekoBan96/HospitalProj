@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-if="hospitals <= 0">
-      <!-- <h1 class="pl-[50px]">Идет загрузка...</h1> -->
       <SkeletonList> </SkeletonList>
     </div>
     <div v-else class="flex flex-col space-y-4">
@@ -9,7 +8,7 @@
         <HospitalItem
           v-for="hospital in hospitals"
           :hospital="hospital"
-          :key="hospital._id"
+          :key="hospital.hospital_id"
           @deleteHospital="deleteEmit"
           class="mb-3"
         >
@@ -46,7 +45,7 @@ export default {
 
 <style scoped>
 .list-move,
-/* apply transition to moving elements */
+
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s ease;
@@ -58,8 +57,6 @@ export default {
   transform: translateX(30px);
 }
 
-/* ensure leaving items are taken out of layout flow so that moving
-   animations can be calculated correctly. */
 .list-leave-active {
   position: absolute;
 }

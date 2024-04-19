@@ -5,13 +5,13 @@
             <h1
                 class="font-bold text-[25px] max-w-[900px] overflow-hidden whitespace-nowrap mb-2 capitalize dark:text-white">
                 {{
-                    device.deviceName }}
+                    device.device_name }}
             </h1>
             <i class="fa-solid fa-trash mr-[10px] dark:text-white text-[20px] cursor-pointer"
-                @click="$emit('deleteDevice', device._id)" v-show="isAuth"></i>
+                @click="$emit('deleteDevice', device.device_id)" v-show="isAuth"></i>
         </div>
-        <p class="max-h-[180px] oveflow-hidden mb-4 capitalize dark:text-white">{{ device.deviceDescription }}</p>
-        <MyButton class="self-start" @click="download(device._id)">Скачать</MyButton>
+        <p class="max-h-[180px] oveflow-hidden mb-4 capitalize dark:text-white">{{ device.device_desk }}</p>
+        <MyButton class="self-start" @click="download(device.device_id)">Скачать</MyButton>
     </div>
 </template>
 

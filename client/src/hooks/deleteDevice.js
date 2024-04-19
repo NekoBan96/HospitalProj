@@ -8,9 +8,6 @@ export default function deleteDevice() {
             const response = axios.delete('http://localhost:5000/db/deletedevice',{
                 params:{
                     id: id
-                },
-                headers:{
-                    Authorization: store.getters.getToken,
                 }
             })
         } catch (error) {

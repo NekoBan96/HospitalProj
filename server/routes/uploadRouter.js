@@ -1,24 +1,11 @@
+const Router = require("express");
+const router = new Router();
+const UploadController = require("../helpers/uploadHelper");
 const express = require('express');
-const uploadHelper = require('../helpers/uploadHelper');
-const router = express.Router();
+const app = express();
 
-const fsp = require('node:fs/promises');
-
-const hospitalModel = require('../models/hospitalsModel')
-const devicesModel = require('../models/devicesModel')
-const uploadController = require('../controllers/uploadController')
-const authMiddleware = require('../helpers/authMiddleware')
-
-router.get('/download', (req, res)=>{
-    id = req.query.id
-    // const filePath = path.resolve(__dirname + '../helpers/library/123.png');
-    res.sendFile(`${id}.pdf`, { root: './library' })
-})
-
-router.post('/device', authMiddleware, (req, res) => {
-    uploadController.add(req, res)
-})
-
-
+router.post("/uploadFile", UploadController.uploadFile);
+router.get('/download', UploadController.download);
 
 module.exports = router;
+

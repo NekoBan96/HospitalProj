@@ -1,5 +1,4 @@
 <template>
-
     <body class="dark:bg-[#002137e5] overflow-x-hidden font-body bg-[#F1F1F1]">
         <div class="flex flex-col">
             <!-- HEADER -->
@@ -56,7 +55,6 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useDark } from '@vueuse/core';
 import { useStore } from 'vuex';
 import HospitalList from '@/components/HospitalList.vue';
 import Header from '@/components/Header.vue';
@@ -76,13 +74,18 @@ const openDialog = (id) => {
     dialogVisible.value = true
 }
 const fetchPage = (page) => {
+    searchQuery.value = '';
     currentPage.value = page;
     loadHospitals();
 };
-const deleteFunc = () => {
-    deleteRequest(idToDelete)
+const deleteFunc = async () => {
+    await deleteRequest(idToDelete);
+    await loadHospitals();
+    if (sortedHospitals.value.length === 0) {
+        currentPage.value--;
+    }
     loadHospitals();
-    dialogVisible.value = false
+    dialogVisible.value = false;
 }
 
 </script>

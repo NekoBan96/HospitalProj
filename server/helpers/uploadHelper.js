@@ -1,30 +1,47 @@
-const fsp = require('node:fs/promises'),
-express = require('express'),
-app = express(),
-fileUpload = require('express-fileupload'),
-{ log } = require('console'),
-path = require('path'),
-formidable = require('formidable')
+const { promisify } = require("util");
+const fs = require("fs");
+const { execSync } = require("child_process");
+const writeFile = promisify(fs.writeFile);
+const fsp = require("node:fs/promises");
+const path = require("path");
+const mime = require("mime-types");
 
+class UploadController {
+  async uploadFile(req, res) {
+    console.log("Запрос на выкладывание файлов");
+    if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).send("Нет файла.");
+    }
+    const file = req.files.file;
+    const fileExtension = req.body.fileExtension;
+    const fileId = req.body.id;
+    try {
+      await writeFile(`./library/${fileId}.${fileExtension}`, file.data);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).send("Ошибка с записью файла");
+    }
+    console.log(`Файл записан с id=${fileId}`);
+    res.send("Файл записан");
+  }
 
-app.use(fileUpload({defCharset: 'utf8', defParamCharset: 'utf8'}));
-
-let uploadFile = function (req, res, id) {
-  log("Запрос на выкладывание файлов");
-  if (!req.files || Object.keys(req.files).length === 0) //проверкаа наличия файлов
-      return res.status(400).send('No files were uploaded.');
-  
-  // console.log(req.files);
-
-  let sampleFile = req.files.file; 
-  const fileName = req.body.name;  
-  const fileExtension = req.body.fileExtension;
-  console.log(fileExtension);
-
-  try {
-    fsp.writeFile(`./library/${id}.${fileExtension}`, sampleFile.data)
-  } catch(err){console.log(err);}
-  console.log("save done");
+  download(req, res) {
+    const deviceId = req.query.id;
+    const libraryPath = path.join(__dirname, "..", "library");
+    const files = fs.readdirSync(libraryPath);
+    const file = files.find((f) => path.parse(f).name === deviceId);
+    if (!file) {
+      console.error(`Файл не найден: ${deviceId}`);
+      res.sendStatus(404);
+      return;
+    }
+    const filePath = path.join(libraryPath, file);
+    const contentType = mime.lookup(file);
+    res.setHeader("Content-Type", contentType);
+    res.sendFile(filePath);
+    res.statusMessage = file;
+    res.status(200);
+  }
 }
 
-exports.uploadFile = uploadFile;
+module.exports = new UploadController();

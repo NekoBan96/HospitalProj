@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { ref } from 'vue'
 import { useStore } from 'vuex'
+import router from "@/router/index.js";
 
 export function addHospital() {
     const hospitalName = ref('')
@@ -24,11 +25,7 @@ export function addHospital() {
             formData.append('geoPos', geoPos.value);
             formData.append('leaderName', leaderName.value);
             formData.append('leaderJobTitle', leaderJobTitle.value);
-            const response = await axios.post("http://localhost:5000/db/addhospital", formData, {
-                headers: {
-                    Authorization: store.getters.getToken,
-                }
-            });
+            const response = await axios.post("http://localhost:5000/db/addhospital", formData);
             response.statusText === "Created" ? isShow.value = true : isShow.value = false
             hospitalName.value = ''
             telNum.value = ''
@@ -36,6 +33,7 @@ export function addHospital() {
             geoPos.value = ''
             leaderName.value = ''
             leaderJobTitle.value = ''
+            router.push("/");
         } catch (error) {
             ErrorDialog.value = true
             console.log(error)

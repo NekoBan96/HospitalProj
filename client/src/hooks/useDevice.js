@@ -12,14 +12,14 @@ export function useDevices() {
     const typeOfReq = ref(0); // 0-Loading 1-Everything is fine 2-AxiosError
     const loadDevices = async () => {
         try {
-            const response = (await axios.get('http://localhost:5000/db/getdevicebyhospitalid', {
+            const response = await axios.get(`http://localhost:5000/db/getalldevices`,{
                 params: {
-                    id: route.params.id,
+                    id: route.params.id
                 }
-            }))
+            })
             devices.value = response.data
             totalPages.value = Math.ceil(response.data.length / limit.value)
-            sortedByRouteIdDevices.value = (await axios.get('http://localhost:5000/db/getdevicebyhospitalid', {
+            sortedByRouteIdDevices.value = (await axios.get(`http://localhost:5000/db/getdevicebyhospitalid?=${currentPage.value}`, {
                 params: {
                     id: route.params.id,
                     page: currentPage.value

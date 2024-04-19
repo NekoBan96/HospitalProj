@@ -26,7 +26,7 @@
                     </div>
                 </div>
             </Modal>
-            <!-- HardWare List Container -->
+            <!-- Devices List -->
             <div class="min-h-[800px] w-full flex flex-col">
                 <DeviceList :devices="sortedDevices" :typeOfReq="typeOfReq" @delete="openDialog">
                 </DeviceList>
@@ -76,6 +76,7 @@ const openDialog = (id) => {
 const fetchPage = (page) => {
     currentPage.value = page;
     loadDevices();
+    console.log(currentPage.value)
 };
 const addButtonPressed = () => {
     router.push({ path: `/hospital/${route.params.id}/addDevice` });
@@ -84,10 +85,14 @@ const typeOfReqComp = computed(() => {
     return typeOfReq.value;
 });
 
-const deleteFunc = () => {
-    deleteRequest(idToDelete);
+const deleteFunc = async () => {
+    await deleteRequest(idToDelete);
+    await loadDevices();
+    if (sortedDevices.value.length === 0) {
+        currentPage.value--;
+    }
     loadDevices();
-    dialogVisible.value = false
+    dialogVisible.value = false;
 }
 
 </script>

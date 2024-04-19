@@ -1,60 +1,39 @@
 import axios from "axios";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
-import { useStore } from "vuex";
+import router from "@/router/index.js";
 
 export function addDevice() {
-  const store = useStore();
   const route = useRoute();
   const deviceName = ref("");
   const deviceDescription = ref("");
-  const hospitalId = ref("");
   const filePath = ref();
   const isShow = ref(false);
   const files = ref();
   const ErrorDialog = ref(false);
   const addDeviceToDb = async () => {
     try {
+      if (deviceName.value === "" || deviceDescription.value === "" || route.params.id === "") 
+        return;
       const formData = new FormData();
-      const file = new FormData();
-      hospitalId.value = route.params.id;
-      if (
-        deviceName.value === "" ||
-        deviceDescription.value === "" ||
-        hospitalId.value === ""
-      ) {
-        return 1;
-      }
       formData.append("deviceName", deviceName.value);
       formData.append("deviceDescription", deviceDescription.value);
-      formData.append("hospitalId", hospitalId.value);
+      formData.append("hospitalId", route.params.id);
+      // formData.append("file", files.value[0].name.split(".")[0] || "");
+
+      const response = await axios.post("http://localhost:5000/db/adddevice", formData);
+      const deviceId = response.data.device_id;
+      isShow.value = response.status === 201;
+  
       if (files.value[0]) {
-        const response = await axios.post(
-          "http://localhost:5000/db/adddevice",
-          formData,
-          {
-            headers: {
-              Authorization: store.getters.getToken,
-            },
-          }
-        );
+        const file = new FormData();
         file.append("file", files.value[0]);
-        file.append("fileExtension", files.value[0].name.split('.')[1]);
-        file.append("id", response.data.id);
-        console.log([...file.entries()]);
-        const fileResponse = await axios.post(
-          "http://localhost:5000/upload/device",
-          file,
-          {
-            headers: {
-              Authorization: store.getters.getToken,
-            },
-          }
-        );
-        response.status === 201
-          ? (isShow.value = true)
-          : (isShow.value = false);
+        file.append("id", deviceId);
+        file.append("fileExtension", files.value[0].name.split(".")[1]);
+        // file.append("name", files.value[0].name.split(".")[0] || "");
+        await axios.post("http://localhost:5000/upload/uploadFile", file);
       }
+      router.push(`/hospital/${route.params.id}`);
     } catch (error) {
       ErrorDialog.value = true;
       console.log(error);
@@ -63,7 +42,6 @@ export function addDevice() {
   return {
     deviceName,
     deviceDescription,
-    hospitalId,
     filePath,
     addDeviceToDb,
     isShow,

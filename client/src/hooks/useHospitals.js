@@ -8,7 +8,7 @@ export function useHospitals() {
     const currentPage = ref(1)
     const loadHospitals = async () => {
         try {
-            const allHospitalsRes = await axios.get('http://localhost:5000/db/gethospitals')
+            const allHospitalsRes = await axios.get('http://localhost:5000/db/getallhospitals')
             const response = await axios.get('http://localhost:5000/db/gethospitals', {
                 params: {
                     page: currentPage.value
