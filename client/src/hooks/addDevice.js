@@ -2,19 +2,22 @@ import axios from "axios";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 import router from "@/router/index.js";
-
+import { useToast } from "vue-toastification";
 export function addDevice() {
   const route = useRoute();
   const deviceName = ref("");
   const deviceDescription = ref("");
   const filePath = ref();
-  const isShow = ref(false);
   const files = ref();
-  const ErrorDialog = ref(false);
+  const toast = useToast();
   const addDeviceToDb = async () => {
     try {
-      if (deviceName.value === "" || deviceDescription.value === "" || route.params.id === "") 
+      if (deviceName.value === "" || deviceDescription.value === "" || !files.value){
+        toast.warning("Заполните все поля!", {
+          timeout: 2000,
+        });
         return;
+      }
       const formData = new FormData();
       formData.append("deviceName", deviceName.value);
       formData.append("deviceDescription", deviceDescription.value);
@@ -23,7 +26,6 @@ export function addDevice() {
 
       const response = await axios.post("http://localhost:5000/db/adddevice", formData);
       const deviceId = response.data.device_id;
-      isShow.value = response.status === 201;
   
       if (files.value[0]) {
         const file = new FormData();
@@ -34,9 +36,14 @@ export function addDevice() {
         await axios.post("http://localhost:5000/upload/uploadFile", file);
       }
       router.push(`/hospital/${route.params.id}`);
+      toast.success("Аппарат добавлен", {
+          timeout: 2000,
+        });
     } catch (error) {
-      ErrorDialog.value = true;
       console.log(error);
+      toast.error("Произошла какая-то ошибка...", {
+        timeout: 2000,
+      });
     }
   };
   return {
@@ -44,8 +51,6 @@ export function addDevice() {
     deviceDescription,
     filePath,
     addDeviceToDb,
-    isShow,
     files,
-    ErrorDialog,
   };
 }

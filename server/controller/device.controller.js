@@ -70,7 +70,6 @@ class DeviceController {
       console.log(error);
     }
   }
-
 }
 
 module.exports = new DeviceController();

@@ -6,12 +6,6 @@
             <header>
                 <Header></Header>
             </header>
-            <MyDialog v-model:isShow="isShow" @update:isShow="value => isShow = value">
-                <h1 class="text-[20px] text-center">Аппарат добавлен</h1>
-            </MyDialog>
-            <ErrorDialog v-model:ErrorDialog="ErrorDialog" @update:ErrorDialog="value => ErrorDialog = value">
-                <h1 class="text-[20px] text-center">Аппарат не был добавлен</h1>
-            </ErrorDialog>
             <main class="h-screen flex flex-col mt-[100px] dark:text-white">
                 <div class="w-screen lg:mb-10 mb-2">
                     <h1 class="text-[30px] font-bold text-center">Добавление аппаратуры</h1>
@@ -56,7 +50,7 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router'
 const store = useStore()
 const router = useRouter()
-const { deviceName, deviceDescription, hospitalId, filePath, addDeviceToDb, isShow, files, ErrorDialog } = addDevice();
+const { deviceName, deviceDescription, hospitalId, filePath, addDeviceToDb, files } = addDevice();
 const onFileChange = (e) => {
     files.value = e.target.files || e.dataTransfer.files;
 }
@@ -66,5 +60,3 @@ onBeforeMount(() => {
     }
 });
 </script>
-
-<style scoped></style>

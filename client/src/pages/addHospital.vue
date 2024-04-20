@@ -6,12 +6,6 @@
             <header>
                 <Header></Header>
             </header>
-            <MyDialog v-model:isShow="isShow" @update:isShow="value => isShow = value">
-                <h1 class="text-[20px] text-center">Учреждение добавлено</h1>
-            </MyDialog>
-            <ErrorDialog v-model:ErrorDialog="ErrorDialog" @update:ErrorDialog="value => ErrorDialog = value">
-                <h1 class="text-20 text-center">Аппарат не был добавлен</h1>
-            </ErrorDialog>
             <main class="h-screen flex flex-col mt-[100px] dark:text-white">
                 <div class="w-screen lg:mb-10 mb-2">
                     <h1 class="text-[30px] font-bold text-center">Добавление учреждения</h1>
@@ -62,7 +56,7 @@ import { addHospital } from '@/hooks/addHospital.js';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router'
 import { ref, onBeforeMount } from 'vue';
-const { hospitalName, telNum, email, geoPos, leaderName, leaderJobTitle, addHospitalToDb, isShow, ErrorDialog } = addHospital();
+const { hospitalName, telNum, email, geoPos, leaderName, leaderJobTitle, addHospitalToDb, isShow } = addHospital();
 const store = useStore()
 const router = useRouter()
 onBeforeMount(() => {

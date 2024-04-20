@@ -1,21 +1,19 @@
 <template>
   <div>
-    <div v-show="typeOfReq === 2 && devices <= 0">
-      <h1 class="lg:ml-[370px] text-[25px] font-bold pl-[20px] dark:text-white">
-        Произошла какая-то ошибка.
-      </h1>
-    </div>
     <div v-show="typeOfReq === 0">
       <div class="flex justify-center items-center">
         <SkeletonList> </SkeletonList>
       </div>
     </div>
-    <div v-show="devices <= 0 && typeOfReq === 1">
-      <h1 class="lg:ml-[370px] text-[25px] font-bold pl-[20px] dark:text-white">
-        В данном учреждении нет аппаратов.
-      </h1>
+    <div v-show="devices.length === 0 && typeOfReq === 1">
+      <div class="flex lg:ml-[380px] justify-start items-center mt-20">
+        <h1 class="font-bold text-3xl">Аппаратов нет в этом учреждении.</h1>
+      </div>
     </div>
-    <div class="flex flex-col justify-center items-center space-y-4">
+    <div
+      v-show="devices.length !== 0 && typeOfReq === 1"
+      class="flex flex-col justify-center items-center space-y-4"
+    >
       <TransitionGroup name="list" tag="ul">
         <DeviceItem
           v-for="device in devices"
@@ -58,7 +56,6 @@ export default {
 
 <style scoped>
 .list-move,
-
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s ease;

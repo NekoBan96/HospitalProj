@@ -10,7 +10,6 @@ export function downloadDevice() {
           params: { id },
         }
       );
-      console.log(response);
       const text = response.statusText;
       const contentType = response.headers['content-type'];
       console.log(contentType.split(".")[1]);
@@ -20,7 +19,6 @@ export function downloadDevice() {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      console.log(response);
       link.setAttribute("download", `${id}.${text.split('.')[1]}`);
       document.body.appendChild(link);
       link.click();
