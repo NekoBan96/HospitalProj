@@ -5,7 +5,11 @@
       <!-- Header -->
       <div class="flex flex-col justify-center mb-20">
         <Header></Header>
-        <MyInput class="lg:self-start lg:ml-[360px]" v-model="searchQuery">
+        <MyInput
+          class="lg:self-start lg:ml-[360px]"
+          v-model="searchQuery"
+          @search_request="searchRequest()"
+        >
         </MyInput>
       </div>
       <div class="w-screen mb-[30px] flex justify-around items-center">
@@ -32,7 +36,7 @@
       <!-- Devices List -->
       <div class="min-h-[800px] w-full flex flex-col">
         <DeviceList
-          :devices="sortedDevices"
+          :devices="sortedByRouteIdDevices"
           :typeOfReq="typeOfReq"
           @delete="openDialog"
         >
@@ -41,6 +45,7 @@
       <!-- PAGINATION -->
       <div class="flex items-center justify-center my-6">
         <div
+          v-show="!isPaginationHidden"
           v-for="(page, index) in totalPages"
           :key="page"
           class="flex items-center justify-center border-2 border-black h-[30px] w-[30px] cursor-pointer dark:text-white dark:border-white p-[15px]"
@@ -67,7 +72,6 @@ import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import DeviceList from "@/components/DeviceList.vue";
 import { useDevices } from "@/hooks/useDevice.js";
-import useSortedDevices from "@/hooks/sortedDevices.js";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import deleteDevice from "@/hooks/deleteDevice.js";
@@ -75,6 +79,11 @@ import { useToast } from "vue-toastification";
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
+const searchQuery = ref("");
+let isPaginationHidden = ref(false);
+const dialogVisible = ref(false);
+let idToDelete = "";
+let isAuth = store.state.isAuth;
 const {
   devices,
   sortedByRouteIdDevices,
@@ -82,18 +91,34 @@ const {
   totalPages,
   loadDevices,
   typeOfReq,
+  allDevices,
 } = useDevices();
-const { searchQuery, sortedDevices } = useSortedDevices(sortedByRouteIdDevices);
 const { deleteRequest } = deleteDevice();
-const dialogVisible = ref(false);
-let idToDelete = "";
-let isAuth = store.state.isAuth;
 // FUNCTTIONS
+const searchRequest = () => {
+  try {
+    if (searchQuery.value === "") {
+      isPaginationHidden.value = false;
+      fetchPage(1);
+      return;
+    } else {
+      isPaginationHidden.value = true;
+      sortedByRouteIdDevices.value = devices.value.filter((device) =>
+        device.device_name
+          .toLowerCase()
+          .includes(searchQuery.value.toLowerCase())
+      );
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 const openDialog = (id) => {
   idToDelete = id;
   dialogVisible.value = true;
 };
 const fetchPage = (page) => {
+  isPaginationHidden.value = false;
   currentPage.value = page;
   loadDevices();
   console.log(currentPage.value);
@@ -108,7 +133,7 @@ const typeOfReqComp = computed(() => {
 const deleteFunc = async () => {
   await deleteRequest(idToDelete);
   // await loadDevices();
-  if (sortedDevices.value.length === 0) {
+  if (sortedByRouteIdDevices.value.length === 0) {
     currentPage.value--;
   }
   loadDevices();

@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div class="flex justify-center xl:justify-end xl:pr-[550px] items-center mt-[30px]">
-                    <MyButton @click="addHospitalToDb()">Добавить</MyButton>
+                    <MyButton @click="addHospitalToDb()" @keyup.enter="addHospitalToDb()">Добавить</MyButton>
                 </div>
             </main>
             <footer>

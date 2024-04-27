@@ -24,4 +24,7 @@ app.use("/db", hospitalRouter);
 const uploadRouter = require("./routes/uploadRouter");
 app.use("/upload", uploadRouter);
 
+const userRouter = require("./routes/userRouter");
+app.use("/user", userRouter);
+
 app.listen(PORT, () => console.log(`server started on port ${PORT}`));

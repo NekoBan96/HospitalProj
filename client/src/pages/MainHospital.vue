@@ -4,7 +4,12 @@
       <!-- HEADER -->
       <Header @loadHospitals="fetchPage(1)"> </Header>
       <div class="flex xl:ml-[340px] xl:self-start">
-        <MyInput class="sm:mb-10" v-model="searchQuery"> </MyInput>
+        <MyInput
+          class="sm:mb-10"
+          v-model="searchQuery"
+          @search_request="searchRequest()"
+        >
+        </MyInput>
       </div>
       <Modal v-model:show="dialogVisible">
         <div class="flex flex-col justify-center items-center">
@@ -42,13 +47,14 @@
               >
             </div>
           </div>
-          <HospitalList :hospitals="sortedHospitals" @delete="openDialog">
+          <HospitalList :hospitals="hospitals" @delete="openDialog">
           </HospitalList>
         </div>
       </div>
       <!-- PAGINATION -->
-      <div class="flex items-center justify-center my-6">
+      <div class="pagination flex items-center justify-center my-6">
         <div
+          v-show="!isPaginationHidden"
           v-for="page in totalPages"
           :key="page"
           class="flex items-center justify-center border-2 border-black h-[30px] w-[30px] cursor-pointer dark:text-white dark:border-white p-[15px]"
@@ -83,11 +89,31 @@ import { useToast } from "vue-toastification";
 const store = useStore();
 let isAuth = store.state.isAuth;
 const { deleteRequest } = deleteHospital();
-const { hospitals, totalPages, currentPage, loadHospitals } = useHospitals();
-const { searchQuery, sortedHospitals } = useSortedHospitals(hospitals);
+const { hospitals, totalPages, currentPage, allHospitals, loadHospitals } =
+  useHospitals();
 const dialogVisible = ref(false);
+const searchQuery = ref("");
 let idToDelete = "";
+let isPaginationHidden = ref(false);
 const toast = useToast();
+const searchRequest = () => {
+  try {
+    if (searchQuery.value === "") {
+      isPaginationHidden.value = false;
+      fetchPage(1);
+      return;
+    } else {
+      isPaginationHidden.value = true;
+      hospitals.value = allHospitals.value.filter((hospital) =>
+        hospital.hospital_name
+          .toLowerCase()
+          .includes(searchQuery.value.toLowerCase())
+      );
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 const myMethod = () => {
   this.toast.info("I'm an info toast!");
 };
@@ -96,6 +122,7 @@ const openDialog = (id) => {
   dialogVisible.value = true;
 };
 const fetchPage = (page) => {
+  isPaginationHidden.value = false;
   searchQuery.value = "";
   currentPage.value = page;
   loadHospitals();
@@ -103,7 +130,7 @@ const fetchPage = (page) => {
 const deleteFunc = async () => {
   await deleteRequest(idToDelete);
   await loadHospitals();
-  if (sortedHospitals.value.length === 0) {
+  if (hospitals.value.length === 0) {
     currentPage.value--;
   }
   loadHospitals();

@@ -13,7 +13,7 @@ export function useDevices() {
   const toast = useToast();
   const loadDevices = async () => {
     try {
-      const response = await axios.get(
+      const allDevices = await axios.get(
         `http://localhost:5000/db/getalldevices`,
         {
           params: {
@@ -21,8 +21,8 @@ export function useDevices() {
           },
         }
       );
-      devices.value = response.data;
-      totalPages.value = Math.ceil(response.data.length / limit.value);
+      devices.value = allDevices.data;
+      totalPages.value = Math.ceil(allDevices.data.length / limit.value);
       sortedByRouteIdDevices.value = (
         await axios.get(
           `http://localhost:5000/db/getdevicebyhospitalid?=${currentPage.value}`,
@@ -51,6 +51,6 @@ export function useDevices() {
     currentPage,
     totalPages,
     loadDevices,
-    typeOfReq
+    typeOfReq,
   };
 }

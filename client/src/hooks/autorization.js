@@ -8,14 +8,14 @@ export default function autorization() {
   const router = useRouter();
   const store = useStore();
   const login = async () => {
-    const formData = new FormData();
-    formData.append("email", email.value);
-    formData.append("pass", password.value);
     try {
-      const response = await axios.post(
-        "http://localhost:5000/users/log",
-        formData
-      );
+      const response = await axios.get(
+        "http://localhost:5000/user/login",{
+          params:{
+            login: email.value,
+            password: password.value
+          }
+        })
       console.log(response);
       if (response.status === 200) {
         store.commit("setAuth", true);

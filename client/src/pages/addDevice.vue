@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <div class="flex justify-center xl:justify-end xl:pr-[500px] items-center mt-[30px]">
-                    <MyButton @click="addDeviceToDb()">Добавить</MyButton>
+                    <MyButton @click="addDeviceToDb()" @keyup.enter="addDeviceToDb()">Добавить</MyButton>
                 </div>
             </main>
             <footer>
