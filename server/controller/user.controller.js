@@ -28,11 +28,10 @@ class UserController {
 
   async logIn(req, res) {
     try {
-      const login = req.query.login;
-      const password = req.query.password;
+      const { login, password } = req.query;
       const user = await useCheck(login);
       if (user.message === "Account is not in use") {
-        return res.status(400).json({ message: "Неверный логин или пароль" });
+        return res.status(403).json({ message: "Неверный логин или пароль" });
       }
       hashHelper.scryptVerify(password, user.user.password).then((isVerif) => {
         console.log(isVerif);

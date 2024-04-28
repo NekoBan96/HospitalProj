@@ -11,8 +11,10 @@ export default function deleteDevice() {
         params: {
           id: id,
         },
+        headers: {
+          authorization: store.getters.getToken,
+        },
       });
-      console.log(response)
       if (response.status === 200) {
         toast.info("Учреждение удалено", {
           timeout: 2000,

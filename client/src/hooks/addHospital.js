@@ -36,7 +36,12 @@ export function addHospital() {
       formData.append("leaderJobTitle", leaderJobTitle.value);
       const response = await axios.post(
         "http://localhost:5000/db/addhospital",
-        formData
+        formData,
+        {
+          headers:{
+            authorization: store.getters.getToken
+          }
+        }
       );
       hospitalName.value = "";
       telNum.value = "";

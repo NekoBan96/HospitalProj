@@ -8,11 +8,13 @@ export default function deleteHospital() {
   const deleteRequest = async (hospital_id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/db/deletehospital?id=${hospital_id}`
+        `http://localhost:5000/db/deletehospital?id=${hospital_id}`,
+        {
+          headers: {
+            Authorization: store.getters.getToken,
+          },
+        }
       );
-      // headers: {
-      //     Authorization: store.getters.getToken,
-      // }
       if (response.status === 200) {
         toast.info("Учреждение удалено", {
           timeout: 2000,

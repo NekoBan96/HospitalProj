@@ -1,5 +1,4 @@
 <template>
-
     <body class="dark:bg-[#002137e5] overflow-x-hidden font-body bg-[#F1F1F1]">
         <Header> </Header>
         <main class="h-screen flex flex-col justify-center items-center">

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 import router from "@/router/index.js";
 import { useToast } from "vue-toastification";
 export function addDevice() {
@@ -9,10 +10,15 @@ export function addDevice() {
   const deviceDescription = ref("");
   const filePath = ref();
   const files = ref();
+  const store = useStore();
   const toast = useToast();
   const addDeviceToDb = async () => {
     try {
-      if (deviceName.value === "" || deviceDescription.value === "" || !files.value){
+      if (
+        deviceName.value === "" ||
+        deviceDescription.value === "" ||
+        !files.value
+      ) {
         toast.warning("Заполните все поля!", {
           timeout: 2000,
         });
@@ -24,21 +30,33 @@ export function addDevice() {
       formData.append("hospitalId", route.params.id);
       // formData.append("file", files.value[0].name.split(".")[0] || "");
 
-      const response = await axios.post("http://localhost:5000/db/adddevice", formData);
+      const response = await axios.post(
+        "http://localhost:5000/db/adddevice",
+        formData,
+        {
+          headers: {
+            authorization: store.getters.getToken,
+          },
+        }
+      );
       const deviceId = response.data.device_id;
-  
+
       if (files.value[0]) {
         const file = new FormData();
         file.append("file", files.value[0]);
         file.append("id", deviceId);
         file.append("fileExtension", files.value[0].name.split(".")[1]);
         // file.append("name", files.value[0].name.split(".")[0] || "");
-        await axios.post("http://localhost:5000/upload/uploadFile", file);
+        await axios.post("http://localhost:5000/upload/uploadFile", file, {
+          headers: {
+            authorization: store.getters.getToken,
+          },
+        });
       }
       router.push(`/hospital/${route.params.id}`);
       toast.success("Аппарат добавлен", {
-          timeout: 2000,
-        });
+        timeout: 2000,
+      });
     } catch (error) {
       console.log(error);
       toast.error("Произошла какая-то ошибка...", {
