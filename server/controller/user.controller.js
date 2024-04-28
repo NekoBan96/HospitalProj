@@ -33,24 +33,25 @@ class UserController {
       if (user.message === "Account is not in use") {
         return res.status(403).json({ message: "Неверный логин или пароль" });
       }
-      hashHelper.scryptVerify(password, user.user.password).then((isVerif) => {
-        console.log(isVerif);
-        if (isVerif == true) {
-          const token = jwt.sign(
-            {
-              email: login,
-              userName: user.login,
-            },
-            secret,
-            {
-              expiresIn: "7d",
-            }
-          );
-          res.status(200).json({ isVerify: true, token: token });
-        } else {
-          res.status(403).json({ isVerify: "false" });
-        }
-      });
+      const isVerified = await hashHelper.scryptVerify(
+        password,
+        user.user.password
+      );
+      if (isVerified) {
+        const token = jwt.sign(
+          {
+            email: login,
+            userName: user.login,
+          },
+          secret,
+          {
+            expiresIn: "7d",
+          }
+        );
+        res.status(200).json({ isVerify: true, token: token });
+      } else {
+        res.status(403).json({ isVerify: "false" });
+      }
     } catch (error) {
       console.log(err);
       res.status(500).json({ error: err });

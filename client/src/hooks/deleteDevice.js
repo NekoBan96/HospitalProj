@@ -7,7 +7,7 @@ export default function deleteDevice() {
   const toast = useToast();
   const deleteRequest = async (id) => {
     try {
-      const response = axios.delete("http://localhost:5000/db/deletedevice", {
+      const response = await axios.delete("http://localhost:5000/db/deletedevice", {
         params: {
           id: id,
         },
@@ -15,6 +15,7 @@ export default function deleteDevice() {
           authorization: store.getters.getToken,
         },
       });
+      console.log(response)
       if (response.status === 200) {
         toast.info("Учреждение удалено", {
           timeout: 2000,
